@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 /**
- * 系统通知消息
+ * 系统消息
  *
  * @author chenhaizhuang
  */
 @Data
-public class SystemNotifyMessage {
+public class SystemMessage {
 
     /**
      * ID
