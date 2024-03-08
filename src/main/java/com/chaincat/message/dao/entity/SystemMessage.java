@@ -19,14 +19,9 @@ public class SystemMessage {
     private Long id;
 
     /**
-     * 消息Code
+     * 消息ID
      */
-    private String messageCode;
-
-    /**
-     * 模板ID
-     */
-    private String templateId;
+    private Long messageId;
 
     /**
      * 模板标题

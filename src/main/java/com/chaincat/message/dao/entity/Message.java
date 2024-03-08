@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 /**
- * 短信
+ * 消息
  *
  * @author chenhaizhuang
  */
 @Data
-public class ShortMessage {
+public class Message {
 
     /**
      * ID
@@ -19,17 +19,12 @@ public class ShortMessage {
     private Long id;
 
     /**
-     * 消息ID
+     * 消息名称
      */
-    private Long messageId;
+    private String messageName;
 
     /**
-     * 模板Code
+     * 实现类名称
      */
-    private String templateCode;
-
-    /**
-     * 模板内容
-     */
-    private String templateContent;
+    private String beanName;
 }

@@ -13,9 +13,9 @@ import java.util.List;
 public class MessageSendReq {
 
     /**
-     * 消息Code
+     * 消息名称
      */
-    private String messageCode;
+    private String messageName;
 
     /**
      * 接受人
@@ -26,4 +26,9 @@ public class MessageSendReq {
      * 参数
      */
     private List<String> params;
+
+    /**
+     * 消息ID
+     */
+    private Long messageId;
 }

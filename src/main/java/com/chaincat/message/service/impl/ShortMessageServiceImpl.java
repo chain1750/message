@@ -3,7 +3,6 @@ package com.chaincat.message.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.DesensitizedUtil;
-import cn.hutool.core.util.ReUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.dysmsapi20170525.Client;
@@ -60,10 +59,9 @@ public class ShortMessageServiceImpl implements MessageService {
     @Override
     public void send(MessageSendReq req) throws Exception {
         String phoneNumber = req.getReceiver();
-        Assert.isTrue(ReUtil.isMatch("^1[3456789]\\d{9}$", phoneNumber));
         // 短信
         ShortMessage shortMessage = shortMessageMapper.selectOne(Wrappers.<ShortMessage>lambdaQuery()
-                .eq(ShortMessage::getMessageCode, req.getMessageCode()));
+                .eq(ShortMessage::getMessageId, req.getMessageId()));
         Assert.notNull(shortMessage, "短信不存在");
         // 构建短信参数和短信内容
         String templateContent = shortMessage.getTemplateContent();
@@ -77,7 +75,7 @@ public class ShortMessageServiceImpl implements MessageService {
         SendSmsRequest request = new SendSmsRequest()
                 .setPhoneNumbers(phoneNumber)
                 .setSignName(signName)
-                .setTemplateCode(shortMessage.getTemplateId());
+                .setTemplateCode(shortMessage.getTemplateCode());
         if (CollUtil.isNotEmpty(paramMap)) {
             request.setTemplateParam(paramMap.toJSONString());
         }
