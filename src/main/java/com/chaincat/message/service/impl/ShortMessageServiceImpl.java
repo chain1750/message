@@ -2,6 +2,8 @@ package com.chaincat.message.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.DesensitizedUtil;
+import cn.hutool.core.util.ReUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.dysmsapi20170525.Client;
@@ -57,6 +59,8 @@ public class ShortMessageServiceImpl implements MessageService {
 
     @Override
     public void send(MessageSendReq req) throws Exception {
+        String phoneNumber = req.getReceiver();
+        Assert.isTrue(ReUtil.isMatch("^1[3456789]\\d{9}$", phoneNumber));
         // 短信
         ShortMessage shortMessage = shortMessageMapper.selectOne(Wrappers.<ShortMessage>lambdaQuery()
                 .eq(ShortMessage::getMessageCode, req.getMessageCode()));
@@ -68,10 +72,10 @@ public class ShortMessageServiceImpl implements MessageService {
         Assert.isTrue(paramKeys.size() == paramValues.size(), "参数不匹配");
         JSONObject paramMap = new JSONObject();
         String messageContent = getMessageContent(templateContent, paramKeys, paramValues, paramMap);
-        log.info("发送短信给{}, 短信内容：{}", desensitizePhoneNumber(req.getReceiver()), messageContent);
+        log.info("发送短信给{}, 短信内容：{}", DesensitizedUtil.mobilePhone(phoneNumber), messageContent);
         // 发送
         SendSmsRequest request = new SendSmsRequest()
-                .setPhoneNumbers(req.getReceiver())
+                .setPhoneNumbers(phoneNumber)
                 .setSignName(signName)
                 .setTemplateCode(shortMessage.getTemplateId());
         if (CollUtil.isNotEmpty(paramMap)) {
@@ -121,15 +125,5 @@ public class ShortMessageServiceImpl implements MessageService {
             templateContent = templateContent.replace(paramKey, paramValue);
         }
         return templateContent;
-    }
-
-    /**
-     * 脱敏手机号
-     *
-     * @param phoneNumber 手机号
-     * @return String
-     */
-    private String desensitizePhoneNumber(String phoneNumber) {
-        return phoneNumber.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
     }
 }
