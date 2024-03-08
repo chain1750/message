@@ -1,5 +1,7 @@
 package com.chaincat.message.service;
 
+import com.chaincat.message.model.MessageSendReq;
+
 /**
  * 消息Service
  *
@@ -10,7 +12,7 @@ public interface MessageService {
     /**
      * 发送
      *
-     * @param param 参数
+     * @param req 请求
      */
-    void send(String param) throws Exception;
+    void send(MessageSendReq req) throws Exception;
 }

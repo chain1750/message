@@ -5,12 +5,12 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 短信发送请求
+ * 发送请求
  *
  * @author chenhaizhuang
  */
 @Data
-public class ShortMessageSendReq {
+public class MessageSendReq {
 
     /**
      * 消息Code
@@ -18,9 +18,9 @@ public class ShortMessageSendReq {
     private String messageCode;
 
     /**
-     * 手机号
+     * 接受人
      */
-    private String phoneNumber;
+    private String receiver;
 
     /**
      * 参数

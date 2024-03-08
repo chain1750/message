@@ -1,6 +1,7 @@
 package com.chaincat.message.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.dysmsapi20170525.Client;
@@ -10,7 +11,7 @@ import com.aliyun.teaopenapi.models.Config;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.chaincat.message.dao.entity.ShortMessage;
 import com.chaincat.message.dao.mapper.ShortMessageMapper;
-import com.chaincat.message.model.ShortMessageSendReq;
+import com.chaincat.message.model.MessageSendReq;
 import com.chaincat.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ import java.util.List;
  * @author chenhaizhuang
  */
 @Slf4j
-@Service
+@Service("shortMessage")
 @RequiredArgsConstructor
 public class ShortMessageServiceImpl implements MessageService {
 
@@ -55,21 +56,22 @@ public class ShortMessageServiceImpl implements MessageService {
 
 
     @Override
-    public void send(String param) throws Exception {
-        // 短信发送请求
-        ShortMessageSendReq req = JSON.parseObject(param, ShortMessageSendReq.class);
+    public void send(MessageSendReq req) throws Exception {
         // 短信
         ShortMessage shortMessage = shortMessageMapper.selectOne(Wrappers.<ShortMessage>lambdaQuery()
                 .eq(ShortMessage::getMessageCode, req.getMessageCode()));
+        Assert.notNull(shortMessage, "短信不存在");
         // 构建短信参数和短信内容
         String templateContent = shortMessage.getTemplateContent();
         List<String> paramKeys = getParamKeys(templateContent);
+        List<String> paramValues = req.getParams();
+        Assert.isTrue(paramKeys.size() == paramValues.size(), "参数不匹配");
         JSONObject paramMap = new JSONObject();
-        String messageContent = getMessageContent(templateContent, paramKeys, req.getParams(), paramMap);
-        log.info("发送短信给{}, 短信内容：{}", desensitizePhoneNumber(req.getPhoneNumber()), messageContent);
+        String messageContent = getMessageContent(templateContent, paramKeys, paramValues, paramMap);
+        log.info("发送短信给{}, 短信内容：{}", desensitizePhoneNumber(req.getReceiver()), messageContent);
         // 发送
         SendSmsRequest request = new SendSmsRequest()
-                .setPhoneNumbers(req.getPhoneNumber())
+                .setPhoneNumbers(req.getReceiver())
                 .setSignName(signName)
                 .setTemplateCode(shortMessage.getTemplateId());
         if (CollUtil.isNotEmpty(paramMap)) {
@@ -92,9 +94,10 @@ public class ShortMessageServiceImpl implements MessageService {
             char c = templateContent.charAt(i);
             if (c == '{') {
                 left = i;
-            } else if (c == '}') {
+            } else if (c == '}' && left != -1) {
                 String key = templateContent.substring(left, i + 1);
                 paramKeys.add(key);
+                left = -1;
             }
         }
         return paramKeys;

@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author chenhaizhuang
  */
 @Mapper
-public interface SystemNotifyMessageMapper extends BaseMapper<SystemMessage> {
+public interface SystemMessageMapper extends BaseMapper<SystemMessage> {
 }
