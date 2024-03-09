@@ -61,7 +61,7 @@ public class ShortMessageServiceImpl implements MessageService {
         String phoneNumber = req.getReceiver();
         // 短信
         ShortMessage shortMessage = shortMessageMapper.selectOne(Wrappers.<ShortMessage>lambdaQuery()
-                .eq(ShortMessage::getMessageId, req.getMessageId()));
+                .eq(ShortMessage::getMessageName, req.getMessageName()));
         Assert.notNull(shortMessage, "短信不存在");
         // 构建短信参数和短信内容
         String templateContent = shortMessage.getTemplateContent();

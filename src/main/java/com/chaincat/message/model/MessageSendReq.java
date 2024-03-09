@@ -26,9 +26,4 @@ public class MessageSendReq {
      * 参数
      */
     private List<String> params;
-
-    /**
-     * 消息ID
-     */
-    private Long messageId;
 }

@@ -45,7 +45,6 @@ public class MessageSendListener implements RocketMQListener<String> {
             Message message = messageMapper.selectOne(Wrappers.<Message>lambdaQuery()
                     .eq(Message::getMessageName, req.getMessageName()));
             Assert.notNull(message, "消息不存在");
-            req.setMessageId(message.getId());
             MessageService messageService = applicationContext.getBean(message.getBeanName(), MessageService.class);
             messageService.send(req);
         } catch (Exception e) {

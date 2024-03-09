@@ -19,9 +19,9 @@ public class SystemMessage {
     private Long id;
 
     /**
-     * 消息ID
+     * 消息名称
      */
-    private Long messageId;
+    private String messageName;
 
     /**
      * 模板标题

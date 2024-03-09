@@ -45,7 +45,7 @@ public class SystemMessageServiceImpl implements MessageService {
         String userId = req.getReceiver();
         // 系统消息
         SystemMessage systemMessage = systemMessageMapper.selectOne(Wrappers.<SystemMessage>lambdaQuery()
-                .eq(SystemMessage::getMessageId, req.getMessageId()));
+                .eq(SystemMessage::getMessageName, req.getMessageName()));
         Assert.notNull(systemMessage, "系统消息不存在");
         // 构建系统消息参数
         List<String> params = req.getParams();
