@@ -34,10 +34,10 @@ public class SystemMessageServiceImpl implements MessageService {
 
     private final SystemMessageMapper systemMessageMapper;
 
-    @Value("${system-message.salt}")
+    @Value("${system-message.salt:}")
     private String salt;
 
-    @Value("${system-message.send-url}")
+    @Value("${system-message.send-url:}")
     private String sendUrl;
 
     @Override

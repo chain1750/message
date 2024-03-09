@@ -35,13 +35,13 @@ public class ShortMessageServiceImpl implements MessageService {
 
     private final ShortMessageMapper shortMessageMapper;
 
-    @Value("${aliyun.sms.access-key-id}")
+    @Value("${aliyun.sms.access-key-id:}")
     private String accessKeyId;
 
-    @Value("${aliyun.sms.access-key-secret}")
+    @Value("${aliyun.sms.access-key-secret:}")
     private String accessKeySecret;
 
-    @Value("${aliyun.sms.sign-name}")
+    @Value("${aliyun.sms.sign-name:}")
     private String signName;
 
     private Client client;
