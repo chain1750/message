@@ -10,6 +10,7 @@ import com.chaincat.message.dao.entity.SystemMessage;
 import com.chaincat.message.dao.mapper.SystemMessageMapper;
 import com.chaincat.message.model.MessageSendReq;
 import com.chaincat.message.service.MessageService;
+import com.chaincat.message.utils.StrReplaceUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,11 +51,11 @@ public class SystemMessageServiceImpl implements MessageService {
         // 构建系统消息参数
         List<String> params = req.getParams();
         int index = 0;
-        Pair<Integer, String> titlePair = replace(systemMessage.getTemplateTitle(), params, index);
-        Pair<Integer, String> firstPair = replace(systemMessage.getTemplateFirst(), params, titlePair.getKey());
-        Pair<Integer, String> keyValuePair = replace(systemMessage.getTemplateKeyValue(), params, firstPair.getKey());
-        Pair<Integer, String> remarkPair = replace(systemMessage.getTemplateRemark(), params, keyValuePair.getKey());
-        Pair<Integer, String> urlPair = replace(systemMessage.getTemplateUrl(), params, remarkPair.getKey());
+        Pair<Integer, String> titlePair = StrReplaceUtils.replace(systemMessage.getTemplateTitle(), params, index);
+        Pair<Integer, String> firstPair = StrReplaceUtils.replace(systemMessage.getTemplateFirst(), params, titlePair.getKey());
+        Pair<Integer, String> keyValuePair = StrReplaceUtils.replace(systemMessage.getTemplateKeyValue(), params, firstPair.getKey());
+        Pair<Integer, String> remarkPair = StrReplaceUtils.replace(systemMessage.getTemplateRemark(), params, keyValuePair.getKey());
+        Pair<Integer, String> urlPair = StrReplaceUtils.replace(systemMessage.getTemplateUrl(), params, remarkPair.getKey());
         log.info("发送系统消息给{}, 消息内容：\n{}\n{}\n{}\n{}\n{}", userId,
                 titlePair.getValue(),
                 firstPair.getValue(),
@@ -71,22 +72,6 @@ public class SystemMessageServiceImpl implements MessageService {
         requestJsonObject.put("sign", getSign(requestJsonObject, salt));
         String response = HttpUtil.post(sendUrl, requestJsonObject.toJSONString());
         log.info("系统消息发送结果：{}", response);
-    }
-
-    /**
-     * 替换参数
-     *
-     * @param content 内容
-     * @param params  参数
-     * @param index   参数索引
-     * @return Pair
-     */
-    private Pair<Integer, String> replace(String content, List<String> params, int index) {
-        while (content.contains("{}")) {
-            Assert.isTrue(index < params.size(), "参数不匹配");
-            content = content.replaceFirst("\\{}", params.get(index++));
-        }
-        return Pair.of(index, content);
     }
 
     /**
