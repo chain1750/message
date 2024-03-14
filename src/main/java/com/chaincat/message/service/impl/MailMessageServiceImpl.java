@@ -2,6 +2,7 @@ package com.chaincat.message.service.impl;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.lang.Pair;
+import cn.hutool.http.HttpUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.chaincat.message.dao.entity.MailMessage;
 import com.chaincat.message.dao.mapper.MailMessageMapper;
@@ -11,6 +12,7 @@ import com.chaincat.message.utils.StrReplaceUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,12 @@ public class MailMessageServiceImpl implements MessageService {
         helper.setTo(email);
         helper.setSubject(titlePair.getValue());
         helper.setText(textPair.getValue(), true);
+        for (int i = textPair.getKey(); i < params.size() - 1; i += 2) {
+            String fileName = params.get(i);
+            String url = params.get(i + 1);
+            byte[] bytes = HttpUtil.downloadBytes(url);
+            helper.addAttachment(fileName, new ByteArrayResource(bytes));
+        }
         mailSender.send(message);
         log.info("邮件消息发送结果：{}", message.getMessageID());
     }

@@ -55,7 +55,6 @@ public class ShortMessageServiceImpl implements MessageService {
         client = new Client(config);
     }
 
-
     @Override
     public void send(MessageSendReq req) throws Exception {
         String phoneNumber = req.getReceiver();
