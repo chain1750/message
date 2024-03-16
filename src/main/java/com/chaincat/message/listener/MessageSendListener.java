@@ -25,7 +25,7 @@ import java.util.ArrayList;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "messageSend", consumerGroup = "${environment}")
+@RocketMQMessageListener(topic = "${topic.message.send}", consumerGroup = "${environment}")
 @RequiredArgsConstructor
 public class MessageSendListener implements RocketMQListener<String> {
 

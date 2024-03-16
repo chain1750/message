@@ -3,6 +3,10 @@
 通过消息队列来消费消息发送
 
 ```yaml
+# 消息发送topic
+topic:
+  message:
+    send: ''
 # 短信
 aliyun:
   sms:
@@ -22,4 +26,5 @@ spring:
     port: 465
     protocol: smtps
     default-encoding: UTF-8
+    from: ''
 ```

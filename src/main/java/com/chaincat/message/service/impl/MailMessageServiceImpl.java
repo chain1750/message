@@ -26,7 +26,7 @@ import java.util.List;
  * @author chenhaizhuang
  */
 @Slf4j
-@Service
+@Service("mailMessage")
 @RequiredArgsConstructor
 public class MailMessageServiceImpl implements MessageService {
 
@@ -34,7 +34,7 @@ public class MailMessageServiceImpl implements MessageService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.from}")
+    @Value("${spring.mail.from:}")
     private String from;
 
     @Override
